@@ -6,14 +6,18 @@ import {
   Form,
   Button,
   Alert,
+  Spinner
 } from "react-bootstrap";
 import Base from "../components/base";
 import logo from "../assets/logo.png";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginUser } from "../services/user.service";
+import UserContext from "../context/user.context";
 const Login = () => {
+  const redirect=useNavigate()
+  const userContext=useContext(UserContext)
   // for two way data bindling
   let [data, setData] = useState({
     email: "",
@@ -28,48 +32,60 @@ const Login = () => {
       [property]: event.target.value,
     });
   };
+  //default mai chai error false hunxa error aayo vane true show garxa
   let [error, setError] = useState({
     errorData: null,
     isError: false,
   });
   // for loading spinner, dy default false gareko
-  const [loading, setLoading] = useState(false);
+ let [loading, setLoading] = useState(false);
   const clearData = () => {
     setData({
       email: "",
       password: "",
     });
-    // setErrorData({
-    //   errorData:null,
-    //   isError:false
-    // })
+    setError({
+      errorData:null,
+      isError:false
+    })
+    setLoading(false)
   };
   const submitForm = (event) => {
     event.preventDefault();
     console.log(data);
     //validate client side
-    if (data.email == undefined || data.email.trim() == "") {
+    if (data.email === undefined || data.email.trim() == "") {
       toast.error("Email is required !!");
       return;
     }
-    if (data.password == undefined || data.password.trim() == "") {
+    if (data.password === undefined || data.password.trim() == "") {
       toast.error("Password is required !!");
       return;
     }
     // all right then calling API
+    setLoading(true)
     loginUser(data)
-      .then((loginData) => {
-        console.log(loginData);
+      .then((data) => {
+        console.log(data);
         toast.success("Logged In");
-        clearData();
+        setError({
+          errorData:null,
+          isError:false
+        })
+        //login true vayepaxi setuser data chalne vayo
+          userContext.setIsLogin(true)
+          //data which is coming from backend
+          userContext.setUserData(data)
+          redirect("/dashboard/home")
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
         setError({
           isError: true,
           errorData: error,
         });
+        
       })
       .finally(() => {
         setLoading(false);
@@ -79,6 +95,7 @@ const Login = () => {
   const loginForm = () => {
     return (
       <Container>
+      
         <Row>
           <Col sm={{ span: 8, offset: 2 }}>
             <Card
@@ -86,6 +103,7 @@ const Login = () => {
               style={{ position: "relative", top: -60 }}
             >
               <Card.Body>
+              {/* {JSON.stringify(userContext)} */}
                 <Container className="text-center mb-3">
                   <img src={logo} alt="logo" height={80} width={80} />
                 </Container>
@@ -107,7 +125,7 @@ const Login = () => {
                   <p>{error.errorData?.response?.data?.message}</p>
                 </Alert>
                 <Form noValidate onSubmit={submitForm}>
-                  <Form.Group controlId="formEmail">
+                  <Form.Group className="mb-3">
                     <Form.Label>Enter your email</Form.Label>
                     <Form.Control
                       type="email"
@@ -116,7 +134,7 @@ const Login = () => {
                       value={data.email}
                     />
                   </Form.Group>
-                  <Form.Group controlId="formPassword">
+                  <Form.Group className="mb-3">
                     <Form.Label>Enter your password</Form.Label>
                     <Form.Control
                       type="password"
@@ -137,12 +155,20 @@ const Login = () => {
                       className="text-uppercase"
                       variant="success"
                       type="submit"
+                      disabled={loading}
                     >
-                      Login
+                    <Spinner
+                        animation="border"
+                        size="sm"
+                        hidden={!loading}
+                        className={'me-2'}
+                      />
+                     <span hidden={!loading}>Please wait...</span>
+                    <span hidden={loading}>Login</span>
                     </Button>
                     <Button
                       className="ms-2 text-uppercase"
-                      variant="danger"
+                      variant="danger" 
                       onClick={clearData}
                     >
                       Reset
