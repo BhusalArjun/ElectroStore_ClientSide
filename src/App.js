@@ -2,21 +2,26 @@
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Index from "./pages";
-import Cart from "./pages/cart";
-import Services from "./pages/services";
-import Contact from "./pages/contact";
-import Dashboard from "./pages/users/dashboard";
-import Profile from "./pages/users/profile";
-import Home from "./pages/users/home";
-import AboutUser from "./pages/users/aboutuser";
-import About from "./pages/about";
+import Index from "./pages/Index";
+import ProductCategories from "./pages/ProductCategories";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import Dashboard from "./pages/users/Dashboard";
+import Profile from "./pages/users/Profile";
+// import Home from "./pages/users/Home";
+import Home from "./pages/users/Home";
+import AboutUser from "./pages/users/AboutUser";
+import About from "./pages/About";
 import Login from "./pages/login";
-import Register from "./pages/register";
+import Register from "./pages/Register";
 // import  Navbar  from './components/navbar';
 import CustomNavbar from "./components/customnavbar";
 import { ToastContainer } from "react-toastify";
-import UserProvider from "./context/user.provider";
+import UserProvider from "./context/UserProvider";
+import Order from "./pages/users/Order";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminHome from "./pages/admin/AdminHome";
+import AddTechnicans from "./pages/admin/AddTechnician";
 // import { Button,Modal } from 'react-bootstrap';
 // import { useState } from 'react';
 // import About from './components/About';
@@ -45,13 +50,18 @@ function App() {
         <ToastContainer position="bottom-right" draggable theme="dark" />
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/productCategories" element={<ProductCategories />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="/users" element={<Dashboard />}>
             <Route path="profile" element={<Profile />} />
             <Route path="aboutuser" element={<AboutUser />} />
             <Route path="home" element={<Home/>} />
+            <Route path="orders" element= {<Order/>}/>
+          </Route>
+          <Route path="/admin" element={<AdminDashboard/>} >
+            <Route path="home" element={<AdminHome/>}/>
+            <Route path="add-technician" element={<AddTechnicans/>}/>
           </Route>
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />

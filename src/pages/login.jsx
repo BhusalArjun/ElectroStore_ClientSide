@@ -1,27 +1,20 @@
-import {
-  Container,
-  Col,
-  Row,
-  Card,
-  Form,
-  Button,
-  Alert,
-  Spinner
-} from "react-bootstrap";
+import {Container,Col,Row,Card,Form,Button,Alert,Spinner} from "react-bootstrap";
 import Base from "../components/base";
 import logo from "../assets/logo.png";
-import { useContext, useState } from "react";
+import React , { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginUser } from "../services/user.service";
-import UserContext from "../context/user.context";
+import UserContext from "../context/UserContext";
+
+
 const Login = () => {
-  const redirect=useNavigate()
-  const userContext=useContext(UserContext)
+  const redirect = useNavigate();
+  const userContext = useContext(UserContext);
   // for two way data bindling
   let [data, setData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   //handle change method
   const handleChange = (event, property) => {
@@ -29,36 +22,36 @@ const Login = () => {
     // console.log(property);
     setData({
       ...data,
-      [property]: event.target.value,
-    });
-  };
+      [property]: event.target.value
+    })
+  }
   //default mai chai error false hunxa error aayo vane true show garxa
   let [error, setError] = useState({
     errorData: null,
-    isError: false,
+    isError: false
   });
   // for loading spinner, dy default false gareko
  let [loading, setLoading] = useState(false);
-  const clearData = () => {
-    setData({
-      email: "",
-      password: "",
-    });
-    setError({
-      errorData:null,
-      isError:false
-    })
-    setLoading(false)
-  };
+  // const clearData = () => {
+  //   setData({
+  //     email: '',
+  //     password: '',
+  //   });
+  //   setError({
+  //     errorData:null,
+  //     isError:false
+  //   })
+  //   setLoading(false)
+  // };
   const submitForm = (event) => {
     event.preventDefault();
     console.log(data);
     //validate client side
-    if (data.email === undefined || data.email.trim() == "") {
+    if (data.email === undefined || data.email.trim() === "") {
       toast.error("Email is required !!");
       return;
     }
-    if (data.password === undefined || data.password.trim() == "") {
+    if (data.password === undefined || data.password.trim() === "") {
       toast.error("Password is required !!");
       return;
     }
@@ -66,48 +59,55 @@ const Login = () => {
     setLoading(true)
     loginUser(data)
       .then((data) => {
-        console.log(data);
-        toast.success("Logged In");
+        console.log(data)
+        toast.success("Logged In")
         setError({
           errorData:null,
           isError:false
         })
+
+
+        //redirecting to dashboard page
+
+
         //login true vayepaxi setuser data chalne vayo
-          userContext.setIsLogin(true)
+          // userContext.setIsLogin(true)
           //data which is coming from backend
-          userContext.setUserData(data)
-          redirect("/dashboard/home")
+          // userContext.setUserData(data)
+
+          userContext.login(data)
+          redirect("/users/home")
       })
       .catch((error) => {
         console.log(error);
         toast.error(error?.response?.data?.message);
         setError({
-          isError: true,
           errorData: error,
+          isError: true
         });
         
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
   const loginForm = () => {
     return (
       <Container>
       
         <Row>
-          <Col sm={{ span: 8, offset: 2 }}>
+          <Col md={{ span: 4, offset: 4 }}>
             <Card
-              className="my-3 border-0 shadow"
-              style={{ position: "relative", top: -60 }}
+              className="my-3 border-0 shadow mb-5" id="makedown"
+              style={{ position: "relative", top: -60   }}
             >
-              <Card.Body>
+              <Card.Body >
               {/* {JSON.stringify(userContext)} */}
                 <Container className="text-center mb-3">
                   <img src={logo} alt="logo" height={80} width={80} />
                 </Container>
-                <h3 className="text-uppercase text-center mb-4">Store Login</h3>
+                <h3 className="text-uppercase text-center mb-4"> Login</h3>
                 {/* default false banayeko,by show */}
                 {/* error bhitra ko is error true xa vane dekhauxa natra no */}
                 <Alert className="mt-3"
@@ -125,6 +125,7 @@ const Login = () => {
                   <p>{error.errorData?.response?.data?.message}</p>
                 </Alert>
                 <Form noValidate onSubmit={submitForm}>
+                {/* email login field */}
                   <Form.Group className="mb-3">
                     <Form.Label>Enter your email</Form.Label>
                     <Form.Control
@@ -150,15 +151,15 @@ const Login = () => {
                       <NavLink to="/register">Click here</NavLink>
                     </p>
                   </Container>
-                  <Container className="text-center">
+                  <Container className="text-center"  >
                     <Button
                       className="text-uppercase"
-                      variant="success"
+                      variant="dark"
                       type="submit"
                       disabled={loading}
                     >
                     <Spinner
-                        animation="border"
+                        animation="grow"
                         size="sm"
                         hidden={!loading}
                         className={'me-2'}
@@ -166,29 +167,40 @@ const Login = () => {
                      <span hidden={!loading}>Please wait...</span>
                     <span hidden={loading}>Login</span>
                     </Button>
-                    <Button
+                    {/* <Button
                       className="ms-2 text-uppercase"
                       variant="danger" 
                       onClick={clearData}
                     >
                       Reset
-                    </Button>
+                    </Button> */}
                   </Container>
+                  
                 </Form>
+                
               </Card.Body>
+            
             </Card>
+           
           </Col>
         </Row>
+      
       </Container>
-    );
-  };
+     
+    )
+    
+  }
+
   return (
     <Base
-      title="Electro Store / LogIn"
+      title="Electro Repair / LogIn"
       description="You can login here. If you have already register the account "
     >
       {/* <h1>This is Login Page</h1> */}
       {loginForm()}
+      <br />
+      <br />
+      <br /><br />
     </Base>
   );
 };

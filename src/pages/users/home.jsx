@@ -1,12 +1,12 @@
 import { useContext } from "react"
-import UserContext from "../../context/user.context"
+import UserContext from "../../context/UserContext"
 
 const Home =()=>{
     const userContext=useContext(UserContext);
     return(
-        <div>
+        <div className="text-center">
          {console.log(userContext)}
-        {JSON.stringify(userContext)}
+        {/* {JSON.stringify(userContext)} */}
        
             <h1>Welcome {userContext.userData?.user?.name  }</h1>
             <h1>user is logged in {userContext.isLogin + ''} </h1>

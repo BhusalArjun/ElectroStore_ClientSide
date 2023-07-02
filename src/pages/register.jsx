@@ -116,7 +116,7 @@ const Register = () => {
             </Row> */}
         <Row>
           {/* {JSON.stringify(data)}; */}
-          <Col sm={{ span: 8, offset: 2 }}>
+          <Col sm={{ span: 6, offset: 3 }}>
             <Card
               className="my-3 border-0 shadow p-4"
               style={{
@@ -129,7 +129,7 @@ const Register = () => {
                   <img src={logo} alt="store logo" height={80} width={80} />
                 </Container>
                 <h3 className="mb-4 text-center text-uppercase">
-                  Store Signup Here
+                   Signup Here
                 </h3>
                 <Form noValidate onSubmit={submitForm}>
                   <Form.Group className="mb-3" controlId="formName">
@@ -144,7 +144,7 @@ const Register = () => {
                     <Form.Control.Feedback type="invalid">{errorData.errorData?.response?.data?.name}</Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label>Email your email</Form.Label>
+                    <Form.Label>Enter your email</Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
@@ -219,11 +219,11 @@ const Register = () => {
                   </Form.Group>
                   <Container className="text-center">
                     <p>
-                      Already Register ! <a href="">Login</a>
+                      Already Register ! <a href="/login">Login</a>
                     </p>
                   </Container>
                   <Container className="text-center">
-                    <Button type="submit" className="text-uppercase" variant="success" disabled={loading}>
+                    <Button type="submit" className="text-uppercase" variant="dark" disabled={loading}>
                     <Spinner 
                       animation="border" 
                       size="sm"
@@ -236,13 +236,13 @@ const Register = () => {
                       {/* yo jaba dekhaune taba loading value true hunxa.kei load huda, jati bela ne nadekhos */}
                       <span hidden={loading}>Register</span>
                     </Button>
-                    <Button
+                    {/* <Button
                       className="ms-2 text-uppercase"
                       variant="danger"
                       onClick={clearData}
                     >
                       Reset
-                    </Button>
+                    </Button> */}
                   </Container>
                 </Form>
               </Card.Body>
@@ -254,7 +254,7 @@ const Register = () => {
   };
   return (
     <Base
-      title="Electro Store / SignUp"
+      title="Electro Repair / SignUp"
       description="Fill the form correctly to register with us. By regsiter with you can use services that we provide"
     >
       {registerForm()}
